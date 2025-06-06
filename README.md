@@ -1,54 +1,77 @@
-# React + TypeScript + Vite
+# Polícia DCC
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Sistema de Gestão de Dados (SGD) da Polícia DCC — PMDCC
 
-Currently, two official plugins are available:
+## Descrição
+Este projeto é um sistema web para gerenciamento de perfis, cursos e autenticação de usuários da Polícia DCC, inspirado no universo Habbo. O sistema permite registro, login, aplicação de cursos por instrutores e gerenciamento de perfis, com integração à Supabase para autenticação e banco de dados.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Tecnologias Utilizadas
 
-## Expanding the ESLint configuration
+### Frontend
+- **React 19** — Biblioteca principal para construção da interface.
+- **TypeScript** — Tipagem estática para maior robustez.
+- **Vite** — Bundler e servidor de desenvolvimento rápido.
+- **React Router DOM** — Roteamento SPA.
+- **React Hook Form** — Gerenciamento de formulários.
+- **React Input Mask** — Máscaras de input.
+- **CSS** — Estilização customizada e responsiva.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Backend/API
+- **Node.js (Vercel Serverless Functions)** — Funções serverless para endpoints de autenticação, registro, cursos, etc. 
+- **Supabase** — Backend as a Service para autenticação, banco de dados.
+- **uuid** — Geração de códigos únicos para verificação.
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+### Outras Dependências
+- **@vitejs/plugin-react** — Integração React + Vite.
+- **ESLint** — Linting e padronização de código.
+- **TypeScript ESLint** — Linting para TypeScript.
+
+## Estrutura do Projeto
+```
+├── src/
+│   ├── commons/         # Helpers e contextos globais
+│   ├── modules/         # Componentes de página (login, register, instrutores, etc)
+│   ├── assets/          # Imagens e SVGs
+│   └── main.tsx         # Entry point React
+├── api/                 # Funções serverless (Vercel)
+├── public/              # Arquivos estáticos
+├── index.html           # HTML principal
+├── package.json         # Dependências e scripts
+├── tsconfig*.json       # Configurações TypeScript
+└── vite.config.ts       # Configuração Vite
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Como rodar o projeto
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. **Clone o repositório:**
+   ```bash
+   git clone https://github.com/seu-usuario/policedcc.git
+   cd policedcc
+   ```
+2. **Instale as dependências:**
+   ```bash
+   npm install
+   ```
+3. **Configure as variáveis de ambiente:**
+   - Pergunte a um desenvolvedor.
+4. **Inicie o servidor de desenvolvimento:**
+   ```bash
+   vercel dev
+   ```
+5. **Acesse:**
+   - [http://localhost:3000](http://localhost:3000)
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+## Scripts Disponíveis
+- `npm run dev` — Inicia o frontend em modo desenvolvimento.
+- `npm run build` — Gera build de produção.
+- `npm run preview` — Visualiza build de produção localmente.
+- `npm run lint` — Lint do código.
+
+## Deploy
+O deploy pode ser feito facilmente na [Vercel](https://vercel.com/) usando as funções serverless da pasta `api/`.
+
+## Licença
+Este projeto é open-source e está sob a licença MIT.
+
+---
+Desenvolvido por DCCDev — PMDCC
