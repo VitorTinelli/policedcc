@@ -7,6 +7,7 @@ import Login from './modules/login/Login.tsx'
 import Homepage from './modules/homepage/Homepage.tsx'
 import Profiles from './modules/profiles/Profiles.tsx'
 import Instrutores from './modules/instrutores/Instrutores.tsx'
+import Tag from './modules/tag/Tag.tsx'
 import { AuthProvider } from './commons/AuthContext'
 import Register from './modules/register/Register.tsx'
 
@@ -43,6 +44,14 @@ const router = createBrowserRouter([
             </AuthProvider>
         ),
     },
+    {
+        path: '/tags',
+        element: (
+            <AuthProvider>
+                <Tag/>
+            </AuthProvider>
+        ),
+    }
 ])
 
 createRoot(document.getElementById('root')!).render(
