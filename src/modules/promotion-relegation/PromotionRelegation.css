@@ -1,0 +1,307 @@
+.container {
+    min-height: calc(100dvh - 16dvh);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to bottom right, rgb(250, 250, 0), #0a7508);
+}
+
+.promotion-relegation-wrapper {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 35rem;
+    box-sizing: border-box;
+}
+
+.promotion-relegation-wrapper h1 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: #000000;
+}
+
+/* Toggle Slider Styles */
+.toggle-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.toggle-slider {
+    display: flex;
+    background-color: #f3f4f6;
+    border-radius: 0.5rem;
+    padding: 0.25rem;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.toggle-button {
+    flex: 1;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 0.375rem;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: transparent;
+    color: #6b7280;
+}
+
+.toggle-button.active {
+    background-color: #ffeb3b;
+    color: #000000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.toggle-button:hover:not(.active) {
+    color: #374151;
+}
+
+.promotion-relegation-wrapper .form-group {
+    margin-bottom: 1rem;
+}
+
+.promotion-relegation-wrapper label {
+    display: block;
+    font-size: 1rem;
+    color: #333333;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+}
+
+.promotion-relegation-wrapper select,
+.promotion-relegation-wrapper input,
+.promotion-relegation-wrapper textarea {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 1rem;
+    height: 2.5rem;
+    border: 1px solid #d1d5db;
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+    outline: none;
+    transition: box-shadow 0.2s, border-color 0.2s;
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.promotion-relegation-wrapper textarea {
+    height: auto;
+    resize: vertical;
+    min-height: 2.5rem;
+    font-family: inherit;
+}
+
+.promotion-relegation-wrapper select:focus,
+.promotion-relegation-wrapper input:focus,
+.promotion-relegation-wrapper textarea:focus {
+    box-shadow: 0 0 0 2px #ffeb3b;
+    border-color: #ffeb3b;
+}
+
+.promotion-relegation-wrapper button {
+    width: 100%;
+    height: 2.5rem;
+    color: #000000;
+    font-weight: bold;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.promotion-relegation-wrapper button:hover {
+    background-color: #fdd835;
+}
+
+/* Submit Button Styles */
+.promotion-submit-btn {
+    background-color: #22c55e !important;
+}
+
+.promotion-submit-btn:hover {
+    background-color: #16a34a !important;
+}
+
+.relegation-submit-btn {
+    background-color: #ef4444 !important;
+    color: #ffffff !important;
+}
+
+.relegation-submit-btn:hover {
+    background-color: #dc2626 !important;
+}
+
+.promotion-relegation-wrapper button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Message Styles */
+.success-message {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background-color: #d1fae5;
+    border: 1px solid #a7f3d0;
+    color: #065f46;
+    border-radius: 0.375rem;
+    text-align: center;
+    font-weight: 500;
+}
+
+.promotion-relegation-wrapper .error-message {
+    color: #ef4444;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.error-text {
+    color: #ef4444;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    margin-bottom: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+    .container {
+        padding: 0.5rem;
+    }
+
+    .promotion-relegation-wrapper {
+        padding: 1.5rem;
+        max-width: none;
+    }
+
+    .promotion-relegation-wrapper h1 {
+        font-size: 1.25rem;
+    }
+
+    .toggle-button {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+    }
+
+    .input,
+    .textarea,
+    .submit-button {
+        font-size: 0.875rem;
+    }
+}
+
+/* Animation for form transition */
+form {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .container {
+        background: linear-gradient(to bottom right, #333333, #111111);
+    }
+
+    .promotion-relegation-wrapper {
+        background-color: #1e1e1e;
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    .promotion-relegation-wrapper h1 {
+        color: #ffffff;
+    }
+
+    .promotion-relegation-wrapper label {
+        color: #ffffff;
+    }
+
+    .promotion-relegation-wrapper select,
+    .promotion-relegation-wrapper input,
+    .promotion-relegation-wrapper textarea {
+        background-color: #333333;
+        border: 1px solid #555555;
+        color: #ffffff;
+    }
+
+    .promotion-relegation-wrapper select:focus,
+    .promotion-relegation-wrapper input:focus,
+    .promotion-relegation-wrapper textarea:focus {
+        box-shadow: 0 0 0 2px #ffeb3b;
+        border-color: #ffeb3b;
+    }
+
+    .promotion-relegation-wrapper button {
+        background-color: #595959;
+        color: #000000;
+    }
+
+    .promotion-relegation-wrapper button:hover {
+        background-color: #fdd835;
+    }
+
+    .promotion-submit-btn {
+        background-color: #22c55e !important;
+    }
+
+    .promotion-submit-btn:hover {
+        background-color: #16a34a !important;
+    }
+
+    .relegation-submit-btn {
+        background-color: #ef4444 !important;
+        color: #ffffff !important;
+    }
+
+    .relegation-submit-btn:hover {
+        background-color: #dc2626 !important;
+    }
+
+    .promotion-relegation-wrapper .error-message {
+        color: #ff6b6b;
+    }
+
+    .error-text {
+        color: #ff6b6b;
+    }
+
+    .success-message {
+        background-color: #1a3527;
+        border: 1px solid #2d5a3d;
+        color: #84cc16;
+    }
+
+    .toggle-slider {
+        background-color: #575757;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .toggle-button {
+        background-color: #333333;
+        color: #ffffff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .toggle-button.active {
+        background-color: #ffeb3b;
+        color: #000000;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .toggle-button:hover:not(.active) {
+        background-color: #404040;
+    }
+}
