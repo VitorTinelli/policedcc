@@ -16,7 +16,10 @@ function Header() {
     return (
         <>
             <header>
-                <h1>POLICIA DCC</h1>
+                <div className="header-content">
+                    <img src="/ddmLogo.png" alt="Logo" />
+                    <h1>Departamento de Desenvolvimento Militar</h1>
+                </div>
                 <form onSubmit={navigateToProfile}>
                     <input
                         type="text"

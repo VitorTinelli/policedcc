@@ -30,6 +30,12 @@ header input:focus {
     border-color: #ffeb3b;
 }
 
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
 @media (prefers-color-scheme: dark) {
     header {
         background-color: #1e1e1e;

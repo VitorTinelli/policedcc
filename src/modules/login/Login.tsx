@@ -45,7 +45,7 @@ function Login() {
   return (
     <div className="login-container">
       <div className="login-wrapper">
-        <h1>SGD/DCC</h1>
+        <h1>SGD/DDM</h1>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="form-group">
             <label htmlFor="username">Nickname:</label>
