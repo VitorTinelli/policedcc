@@ -10,7 +10,7 @@ import Instrutores from './modules/instrutores/Instrutores.tsx'
 import Tag from './modules/tag/Tag.tsx'
 import { AuthProvider } from './commons/AuthContext'
 import Register from './modules/register/Register.tsx'
-import PromotionRelegation from './modules/promotion-relegation/PromotionRelegation.tsx'
+import Promotion from './modules/promotion/Promotion.tsx'
 
 const router = createBrowserRouter([
     {
@@ -54,10 +54,10 @@ const router = createBrowserRouter([
         ),
     },
     {
-        path: '/promocoes-rebaixamentos',
+        path: '/promocoes',
         element: (
             <AuthProvider>
-                <PromotionRelegation/>
+                <Promotion/>
             </AuthProvider>
         ),
     }

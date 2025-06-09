@@ -43,7 +43,7 @@ function Login() {
   }
 
   return (
-    <div className="container">
+    <div className="login-container">
       <div className="login-wrapper">
         <h1>SGD/DCC</h1>
         <form onSubmit={handleSubmit(onSubmit)}>
