@@ -111,9 +111,66 @@
     }
     .register-container button:hover {
         background-color: #fdd835;
-    }
-    .error-text {
+    }    .error-text {
         color: #ff6b6b;
     }
+}
+
+@media (max-width: 1024px) {
+    .register-container {
+        padding: 1rem;
+    }
     
+    .register-container form {
+        max-width: 32rem;
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .register-container {
+        padding: 0.5rem;
+        min-height: 100vh;
+    }
+    
+    .register-container form {
+        padding: 1.5rem;
+        max-width: none;
+        margin: 0.5rem;
+    }
+    
+    .register-container h2 {
+        font-size: 1.25rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .register-container input,
+    .register-container button {
+        font-size: 0.9rem;
+        height: 2.75rem;
+    }
+    
+    .register-container input {
+        margin-bottom: 1rem;
+    }
+    
+    .register-container button {
+        margin-top: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .register-container form {
+        padding: 1rem;
+    }
+    
+    .register-container h2 {
+        font-size: 1.125rem;
+    }
+    
+    .register-container input,
+    .register-container button {
+        font-size: 0.875rem;
+        height: 3rem;
+    }
 }

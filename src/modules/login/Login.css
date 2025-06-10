@@ -115,8 +115,8 @@ label {
 }
 
 @media (prefers-color-scheme: dark) {
-    .container {
-        background: linear-gradient(to bottom right, #333333, #111111);
+    .login-container {
+        background: linear-gradient(to bottom right, #333333, #111111) !important;
     }
 
     .login-wrapper {
@@ -162,9 +162,71 @@ label {
 
     .submit-button:hover {
         background-color: #fdd835;
-    }
-
-    .forgot-password a {
+    }    .forgot-password a {
         color: #ffeb3b;
+    }
+}
+
+@media (max-width: 1024px) {
+    .login-container {
+        padding: 1rem;
+    }
+    
+    .login-wrapper {
+        max-width: 32rem;
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .login-container {
+        padding: 0.5rem;
+        min-height: 100vh;
+    }
+    
+    .login-wrapper {
+        padding: 1.5rem;
+        max-width: none;
+        margin: 0.5rem;
+    }
+    
+    .login-wrapper h1 {
+        font-size: 1.25rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .input,
+    .submit-button {
+        font-size: 0.9rem;
+        height: 2.75rem;
+    }
+    
+    .form-buttons {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .form-buttons .submit-button {
+        width: 100%;
+    }
+    
+    .forgot-password {
+        margin-top: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-wrapper {
+        padding: 1rem;
+    }
+    
+    .login-wrapper h1 {
+        font-size: 1.125rem;
+    }
+    
+    .input,
+    .submit-button {
+        font-size: 0.875rem;
+        height: 3rem;
     }
 }
