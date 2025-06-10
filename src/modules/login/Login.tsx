@@ -43,43 +43,43 @@ function Login() {
   }
 
   return (
-    <div className="login-container">
-      <div className="login-wrapper">
-        <h1>SGD/DDM</h1>
+    <div className="login-page-container">
+      <div className="login-page-wrapper">
+        <h1 className="login-page-title">SGD/DDM</h1>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="form-group">
-            <label htmlFor="username">Nickname:</label>
+          <div className="login-form-group">
+            <label htmlFor="username" className="login-form-label">Nickname:</label>
             <input
               id="username"
               {...register('username', { required: 'Nickname é obrigatório' })}
-              className="input"
+              className="login-input-field"
               placeholder="Digite seu nickname"
             />
-            {errors.username && <p className="error-text">{errors.username.message}</p>}
+            {errors.username && <p className="login-error-text">{errors.username.message}</p>}
           </div>
-          <div className="form-group">
-            <label htmlFor="password">Senha:</label>
+          <div className="login-form-group">
+            <label htmlFor="password" className="login-form-label">Senha:</label>
             <input
               id="password"
               type="password"
               {...register('password', { required: 'Senha é obrigatória' })}
-              className="input"
+              className="login-input-field"
               placeholder="Digite sua senha"
             />
-            {errors.password && <p className="error-text">{errors.password.message}</p>}
+            {errors.password && <p className="login-error-text">{errors.password.message}</p>}
           </div>
-          <div className="form-buttons">
-            <button type="button" className="submit-button" onClick={() => navigate('/register')}>
+          <div className="login-form-buttons">
+            <button type="button" className="login-submit-button" onClick={() => navigate('/register')}>
               Registrar
             </button>
-            <button type="submit" className="submit-button">
+            <button type="submit" className="login-submit-button">
               Entrar
             </button>
           </div>
         </form>
-        <div className="forgot-password">
+        <div className="login-forgot-password">
           <a href="#">Esqueci minha senha</a>
-          {loginError && <p className="error-message">{loginError}</p>}
+          {loginError && <p className="login-error-message">{loginError}</p>}
         </div>
       </div>
     </div>
