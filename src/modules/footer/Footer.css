@@ -18,9 +18,44 @@ footer h1 {
 @media (prefers-color-scheme: dark) {
     footer {
         background-color: #1e1e1e;
-    }
-
-    footer h1 {
+    }    footer h1 {
         color: #ffeb3b;
+    }
+}
+
+@media (max-width: 768px) {
+    footer {
+        min-height: 10vh;
+        padding: 1rem;
+    }
+    
+    footer h1 {
+        font-size: 0.7rem;
+        margin: 0.5rem 0;
+    }
+}
+
+@media (max-width: 640px) {
+    footer {
+        min-height: 12vh;
+        padding: 1.5rem 1rem;
+    }
+    
+    footer h1 {
+        font-size: 0.65rem;
+        line-height: 1.4;
+        margin: 0.25rem 0;
+    }
+}
+
+@media (max-width: 480px) {
+    footer {
+        min-height: 8vh;
+        padding: 1rem 0.5rem;
+    }
+    
+    footer h1 {
+        font-size: 0.6rem;
+        margin: 0.125rem 0;
     }
 }
