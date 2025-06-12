@@ -2,10 +2,10 @@ import { useState } from 'react'
 import { useAuth } from '../../commons/AuthContext'
 import Header from '../header/Header'
 import Footer from '../footer/Footer'
-import './Instrutores.css'
+import './Efb.css'
 import { apiCall } from '../../commons/ApiHelper'
 
-function Instrutores() {
+function Efb() {
     const [courseName, setCourseName] = useState('')
     const [courseStudent, setCourseStudent] = useState('')
     const [courseDate, setCourseDate] = useState('')
@@ -135,4 +135,4 @@ function Instrutores() {
     )
 }
 
-export default Instrutores
+export default Efb

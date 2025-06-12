@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo, useCallback, memo } from 'react'
 import { useParams } from 'react-router-dom'
 import { apiCall } from '../../commons/ApiHelper'
 import { HabboProfilePicture } from '../../commons/HabboProfilePicture'
+
 import Header from '../header/Header'
 import Footer from '../footer/Footer'
 import './Profiles.css'
@@ -39,70 +40,125 @@ interface ProfileData {
   historico: HistoricoItem[]
 }
 
-function Profiles() {
+const Profiles = memo(function Profiles() {
   const { username } = useParams<{ username: string }>()
   const [profileData, setProfileData] = useState<ProfileData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      if (!username) {
-        setError('Username não fornecido')
-        setLoading(false)
+  // Cache utilities
+  const getCachedData = useCallback((key: string) => {
+    const cached = localStorage.getItem(key)
+    const timestamp = localStorage.getItem(`${key}_timestamp`)
+    
+    if (cached && timestamp) {
+      const isValid = Date.now() - parseInt(timestamp) < 10 * 60 * 1000 // 10 minutes
+      if (isValid) {
+        return JSON.parse(cached)
+      }
+    }
+    return null
+  }, [])
+
+  const setCachedData = useCallback((key: string, data: any) => {
+    localStorage.setItem(key, JSON.stringify(data))
+    localStorage.setItem(`${key}_timestamp`, Date.now().toString())
+  }, [])
+
+  const fetchProfile = useCallback(async () => {
+    if (!username) {
+      setError('Username não fornecido')
+      setLoading(false)
+      return
+    }
+
+    const cacheKey = `profile_${username}`
+    
+    // Tentar buscar do cache primeiro
+    const cachedData = getCachedData(cacheKey)
+    if (cachedData) {
+      setProfileData(cachedData)
+      setLoading(false)
+      return
+    }
+
+    try {
+      setLoading(true)
+      setError('')
+
+      const response = await apiCall(`/api/profiles/getMilitarProfile?nick=${encodeURIComponent(username)}`, {
+        method: 'GET'
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        setError(data.error || 'Erro ao carregar perfil')
         return
       }
 
-      try {
-        setLoading(true)
-        setError('')
-
-        const response = await apiCall(`/api/profiles/getMilitarProfile?nick=${encodeURIComponent(username)}`, {
-          method: 'GET'
-        })
-
-        const data = await response.json()
-
-        if (!response.ok) {
-          setError(data.error || 'Erro ao carregar perfil')
-          return
-        }
-
-        setProfileData(data.data)
-      } catch (err) {
-        console.error('Erro ao buscar perfil:', err)
-        setError('Erro de conexão. Tente novamente.')
-      } finally {
-        setLoading(false)
-      }
+      const profileData = data.data
+      
+      // Salvar no cache (10 minutos)
+      setCachedData(cacheKey, profileData)
+      setProfileData(profileData)
+    } catch (err) {
+      console.error('Erro ao buscar perfil:', err)
+      setError('Erro de conexão. Tente novamente.')
+    } finally {
+      setLoading(false)
     }
+  }, [username, getCachedData, setCachedData])
 
+  useEffect(() => {
     fetchProfile()
-  }, [username])
-  const getStatusIcon = (status?: string) => {
-    switch (status) {
-      case 'aprovado': return '✅'
-      case 'rejeitado': return '❌'
-      case 'aguardando': return '⏳'
-      default: return ''
-    }
-  }
+  }, [fetchProfile])
 
-  const getStatusText = (status?: string) => {
+  const handleRefresh = useCallback(() => {
+    const cacheKey = `profile_${username}`
+    // Limpar cache antes de recarregar
+    localStorage.removeItem(cacheKey)
+    localStorage.removeItem(`${cacheKey}_timestamp`)
+    fetchProfile()
+  }, [fetchProfile, username])
+
+  const sortedHistory = useMemo(() => {
+    if (!profileData?.historico) return []
+    return [...profileData.historico].sort((a, b) => 
+      new Date(b.dataFormatada).getTime() - new Date(a.dataFormatada).getTime()
+    )
+  }, [profileData?.historico])
+
+  const getStatusIcon = useCallback((status: string) => {
     switch (status) {
-      case 'aprovado': return 'Aprovado'
-      case 'rejeitado': return 'Rejeitado'
-      case 'aguardando': return 'Aguardando'
-      default: return ''
+      case 'aprovado': 
+      case 'aceita': return '✅'
+      case 'reprovado': 
+      case 'rejeitada': return '❌'
+      case 'aguardando': return '⏳'
+      default: return '📝'
     }
-  }
+  }, [])
+
+  const getStatusText = useCallback((status: string) => {
+    switch (status) {
+      case 'aprovado': 
+      case 'aceita': return 'Aprovado'
+      case 'reprovado': 
+      case 'rejeitada': return 'Rejeitado'
+      case 'aguardando': return 'Aguardando'
+      default: return 'Indefinido'
+    }
+  }, [])
 
   if (loading) {
     return (
       <>
         <Header />
         <div className="profiles-container">
-          <div className="loading">Carregando perfil...</div>
+          <div className="loading-message">
+            Carregando perfil...
+          </div>
         </div>
         <Footer />
       </>
@@ -114,7 +170,12 @@ function Profiles() {
       <>
         <Header />
         <div className="profiles-container">
-          <div className="error-message">{error}</div>
+          <div className="error-message">
+            <p>{error}</p>
+            <button onClick={handleRefresh} className="retry-button">
+              Tentar novamente
+            </button>
+          </div>
         </div>
         <Footer />
       </>
@@ -126,14 +187,16 @@ function Profiles() {
       <>
         <Header />
         <div className="profiles-container">
-          <div className="error-message">Perfil não encontrado</div>
+          <div className="error-message">
+            Perfil não encontrado
+          </div>
         </div>
         <Footer />
       </>
     )
   }
 
-  const { militar, historico } = profileData
+  const { militar } = profileData
 
   return (
     <>
@@ -148,7 +211,7 @@ function Profiles() {
               </div>
               <div className="profile-details">
                 <h1 className="profile-name">{militar.nick}</h1>
-                <div className="profile-rank">{militar.patente || 'Soldado'}</div>
+                <div className="profile-rank">{militar.patente}</div>
                 {militar.cargo && (
                   <div className="profile-position">{militar.cargo}</div>
                 )}
@@ -157,9 +220,9 @@ function Profiles() {
                 )}
               </div>
             </div>
-            
+
             <div className="profile-mission">
-              <h3>Missão:</h3>
+              <h3>Missão</h3>
               <div className="mission-text">{militar.missaoFormatada}</div>
             </div>
 
@@ -167,11 +230,11 @@ function Profiles() {
               <div className="stat-item">
                 <span className="stat-label">Status:</span>
                 <span className={`stat-value status-${militar.status}`}>
-                  {militar.status === 'ativo' ? 'Ativo' : 'Inativo'}
+                  {militar.status}
                 </span>
               </div>
               <div className="stat-item">
-                <span className="stat-label">Membro desde:</span>
+                <span className="stat-label">Alistado em:</span>
                 <span className="stat-value">
                   {new Date(militar.created_at).toLocaleDateString('pt-BR')}
                 </span>
@@ -183,49 +246,52 @@ function Profiles() {
           <div className="profile-history-container">
             <h2>Histórico</h2>
             
-            {historico.length === 0 ? (
-              <div className="no-history">Nenhum registro encontrado</div>
+            {sortedHistory.length === 0 ? (
+              <div className="no-history">
+                <p>Nenhuma atividade registrada</p>
+              </div>
             ) : (
               <div className="history-list">
-                {historico.map((item) => (
+                {sortedHistory.map((item) => (
                   <div key={item.id} className={`history-item ${item.tipo}`}>
                     <div className="history-icon">
-                      <span className="item-icon">{item.icone}</span>
+                      <div className="item-icon">{item.icone}</div>
                       {item.status && (
-                        <span className="status-icon" title={getStatusText(item.status)}>
+                        <div className="status-icon">
                           {getStatusIcon(item.status)}
-                        </span>
+                        </div>
                       )}
                     </div>
                     
                     <div className="history-content">
-                      <div className="history-title">{item.titulo}</div>
-                      
                       <div className="history-meta">
-                        <span className="history-applicator">
+                        <div className="history-applicator">
                           Por: {item.aplicador}
                           {item.aplicadorPatente && ` (${item.aplicadorPatente})`}
                           {item.aplicadorTag && ` [${item.aplicadorTag}]`}
-                        </span>
-                        <span className="history-date">{item.dataFormatada}</span>
-                      </div>                      
-                      {item.status && item.status !== 'aprovado' && (
+                        </div>
+                        <div className="history-date">{item.dataFormatada}</div>
+                      </div>
+                      
+                      <h3 className="history-title">{item.titulo}</h3>
+                      
+                      {item.status && (
                         <div className={`history-status status-${item.status}`}>
-                          Status: {getStatusText(item.status)}
+                          {getStatusText(item.status)}
                         </div>
                       )}
-
+                      
                       {item.motivo && (
                         <div className="history-reason">
-                          <strong>Motivo:</strong> {item.motivo}
+                          Motivo: {item.motivo}
                         </div>
                       )}
-
-                      {(item.tipo === 'promocao' || item.tipo === 'punicao') && item.patenteAtual && item.novaPatente && (
+                      
+                      {item.patenteAtual && item.novaPatente && (
                         <div className="history-promotion-details">
-                          <span className="rank-change">
+                          <div className="rank-change">
                             {item.patenteAtual} → {item.novaPatente}
-                          </span>
+                          </div>
                         </div>
                       )}
                     </div>
@@ -239,6 +305,6 @@ function Profiles() {
       <Footer />
     </>
   )
-}
+})
 
 export default Profiles

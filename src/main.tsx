@@ -1,70 +1,105 @@
-import { StrictMode } from 'react'
+import { StrictMode, Suspense, lazy } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
 import './index.css'
-import Login from './modules/login/Login.tsx'
-import Homepage from './modules/homepage/Homepage.tsx'
-import Profiles from './modules/profiles/Profiles.tsx'
-import Instrutores from './modules/instrutores/Instrutores.tsx'
-import Tag from './modules/tag/Tag.tsx'
 import { AuthProvider } from './commons/AuthContext'
-import Register from './modules/register/Register.tsx'
-import Promotion from './modules/promotion/Promotion.tsx'
+import ErrorBoundary from './commons/ErrorBoundary'
+
+// Lazy loading dos componentes
+const Login = lazy(() => import('./modules/login/Login.tsx'))
+const Homepage = lazy(() => import('./modules/homepage/Homepage.tsx'))
+const Profiles = lazy(() => import('./modules/profiles/Profiles.tsx'))
+const Efb = lazy(() => import('./modules/efb/Efb.tsx'))
+const Tag = lazy(() => import('./modules/tag/Tag.tsx'))
+const Register = lazy(() => import('./modules/register/Register.tsx'))
+const Promotion = lazy(() => import('./modules/promotion/Promotion.tsx'))
+
+// Componente de loading
+const LoadingFallback = () => (
+    <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        fontSize: '16px'
+    }}>
+        Carregando...
+    </div>
+)
+
+// Wrapper para rotas protegidas
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => (
+    <AuthProvider>
+        <Suspense fallback={<LoadingFallback />}>
+            {children}
+        </Suspense>
+    </AuthProvider>
+)
 
 const router = createBrowserRouter([
     {
         path: '/login',
-        element: <Login/>,
+        element: (
+            <Suspense fallback={<LoadingFallback />}>
+                <Login/>
+            </Suspense>
+        ),
     },
     {
         path: '/register',
-        element: <Register/>,
+        element: (
+            <Suspense fallback={<LoadingFallback />}>
+                <Register/>
+            </Suspense>
+        ),
     },
     {
         path: '/',
         element: (
-            <AuthProvider>
+            <ProtectedRoute>
                 <Homepage/>
-            </AuthProvider>
+            </ProtectedRoute>
         ),
     },
     {
         path: '/profile/:username',
         element: (
-            <AuthProvider>
+            <ProtectedRoute>
                 <Profiles/>
-            </AuthProvider>
+            </ProtectedRoute>
         ),
     },
     {
-        path: '/instrutores',
+        path: '/efb',
         element: (
-            <AuthProvider>
-                <Instrutores/>
-            </AuthProvider>
+            <ProtectedRoute>
+                <Efb/>
+            </ProtectedRoute>
         ),
     },
     {
         path: '/tags',
         element: (
-            <AuthProvider>
+            <ProtectedRoute>
                 <Tag/>
-            </AuthProvider>
+            </ProtectedRoute>
         ),
     },
     {
         path: '/promocoes',
         element: (
-            <AuthProvider>
+            <ProtectedRoute>
                 <Promotion/>
-            </AuthProvider>
+            </ProtectedRoute>
         ),
     }
 ])
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
-        <RouterProvider router={router} />
+        <ErrorBoundary>
+            <RouterProvider router={router} />
+        </ErrorBoundary>
     </StrictMode>,
 )

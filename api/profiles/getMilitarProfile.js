@@ -7,18 +7,35 @@ async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' })
   }
 
-  const { nick } = req.query
+  const { nick, email } = req.query
 
-  if (typeof nick !== 'string' || !nick.trim()) {
-    return res.status(400).json({ error: 'Nick é obrigatório' })
+  if ((!nick || typeof nick !== 'string' || !nick.trim()) && 
+      (!email || typeof email !== 'string' || !email.trim())) {
+    return res.status(400).json({ error: 'Nick ou email é obrigatório' })
   }
 
   try {
-    const { data: militar, error: militarError } = await supabase
-      .from('militares')
-      .select('*')
-      .eq('nick', nick)
-      .single()
+    let militar, militarError
+
+    if (email) {
+      // Busca por email
+      const result = await supabase
+        .from('militares')
+        .select('*')
+        .eq('email', email)
+        .single()
+      militar = result.data
+      militarError = result.error
+    } else {
+      // Busca por nick
+      const result = await supabase
+        .from('militares')
+        .select('*')
+        .eq('nick', nick)
+        .single()
+      militar = result.data
+      militarError = result.error
+    }
 
     if (militarError) {
       console.error('Erro ao buscar militar:', militarError)

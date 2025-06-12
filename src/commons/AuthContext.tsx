@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState, useMemo } from 'react'
 import { Navigate } from 'react-router-dom'
 import { apiCall } from './ApiHelper'
 
@@ -19,6 +19,19 @@ async function verifySession(): Promise<any | null> {
             return null
         }
 
+        // Cache da verificação de sessão por 2 minutos
+        const sessionCacheKey = 'session_cache'
+        const sessionTimestampKey = 'session_cache_timestamp'
+        const cachedSession = localStorage.getItem(sessionCacheKey)
+        const cacheTimestamp = localStorage.getItem(sessionTimestampKey)
+        
+        if (cachedSession && cacheTimestamp) {
+            const isValid = Date.now() - parseInt(cacheTimestamp) < 2 * 60 * 1000
+            if (isValid) {
+                return JSON.parse(cachedSession)
+            }
+        }
+
         const response = await apiCall('/api/auth/verifySession', {
             method: 'POST',
             headers: {
@@ -32,8 +45,14 @@ async function verifySession(): Promise<any | null> {
         if (!data.success) {
             console.error(`Erro ao verificar sessão: ${data.error}`)
             localStorage.removeItem('access_token')
+            localStorage.removeItem(sessionCacheKey)
+            localStorage.removeItem(sessionTimestampKey)
             return null
         }
+
+        // Salvar sessão no cache
+        localStorage.setItem(sessionCacheKey, JSON.stringify(data.session))
+        localStorage.setItem(sessionTimestampKey, Date.now().toString())
 
         return data.session
     } catch (err: any) {
@@ -47,13 +66,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
+        let isMounted = true
+        
         async function checkSession() {
             const currentSession = await verifySession()
-            setSession(currentSession)
-            setLoading(false)
+            if (isMounted) {
+                setSession(currentSession)
+                setLoading(false)
+            }
         }
+        
         checkSession()
+        
+        return () => {
+            isMounted = false
+        }
     }, [])
+
+    const contextValue = useMemo(() => ({
+        session,
+        loading
+    }), [session, loading])
 
     if (loading) {
         return <div>Carregando...</div>
@@ -64,7 +97,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     return (
-        <AuthContext.Provider value={{ session, loading }}>
+        <AuthContext.Provider value={contextValue}>
             {children}
         </AuthContext.Provider>
     )
