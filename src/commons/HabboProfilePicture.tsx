@@ -52,10 +52,10 @@ export const HabboProfilePicture: React.FC<HabboProfilePictureProps> = memo(({
 
   const getSizeInPixels = (s: string) => {
     switch (s) {
-      case 'l': return 64;
-      case 'm': return 32;
-      case 's': return 16;
-      default: return 32;
+      case 'l': return 120;
+      case 'm': return 64;
+      case 's': return 32;
+      default: return 16;
     }
   };
 

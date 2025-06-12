@@ -50,14 +50,7 @@
     height: 120px;
 }
 
-.profile-avatar > div {
-    width: 120px !important;
-    height: 120px !important;
-}
-
 .profile-avatar img {
-    width: 120px !important;
-    height: 120px !important;
     object-fit: contain;
 }
 

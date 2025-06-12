@@ -212,7 +212,7 @@ function Homepage() {
                             <div className="link-category">
                                 <h3>🎓 Escola de Formação Básica</h3>
                                 <div className="category-links">
-                                    <Link to="/instrutores" className="quick-link">
+                                    <Link to="/efb" className="quick-link">
                                         <div className="link-icon">📚</div>
                                         <div className="link-content">
                                             <div className="link-title">Aplicar Cursos</div>
