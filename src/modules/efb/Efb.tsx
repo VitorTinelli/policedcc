@@ -26,7 +26,7 @@ function Efb() {
                 return
             }
 
-            const response = await apiCall('/api/instrutores/instrutores', {
+            const response = await apiCall('/api/efb/efb', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -126,7 +126,7 @@ function Efb() {
                         </button>
                     </div>
 
-                    {error && <p className="error-message">{error}</p>}
+                    {error && <p className="efb-error-message">{error}</p>}
                  
                 </form>
             </main>

@@ -79,7 +79,7 @@
     cursor: not-allowed;
 }
 
-.course-form .error-message {
+.course-form .efb-error-message {
     color: #ef4444;
     font-size: 0.875rem;
     margin-bottom: 0.5rem;
