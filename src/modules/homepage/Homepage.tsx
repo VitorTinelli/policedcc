@@ -30,7 +30,6 @@ function Homepage() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState('')
 
-    // Cache para evitar múltiplas chamadas desnecessárias
     const userEmail = useMemo(() => session?.user?.email, [session?.user?.email])
 
     const fetchProfile = useCallback(async () => {
@@ -40,12 +39,10 @@ function Homepage() {
             return
         }
 
-        // Verificar se já temos dados em cache (localStorage)
         const cacheKey = `profile_${userEmail}`
         const cachedData = localStorage.getItem(cacheKey)
         const cacheTimestamp = localStorage.getItem(`${cacheKey}_timestamp`)
         
-        // Cache válido por 5 minutos
         if (cachedData && cacheTimestamp) {
             const isValid = Date.now() - parseInt(cacheTimestamp) < 5 * 60 * 1000
             if (isValid) {
@@ -130,10 +127,7 @@ function Homepage() {
             <Header/>
             <div className="homepage-container">
                 <div className="homepage-content">
-                    {/* Seção de Boas-vindas e Resumo do Perfil */}
                     <section className="welcome-section">
-                        <h1>Bem-vindo ao Sistema da Polícia DCC</h1>
-                        
                         {loading ? (
                             <div className="profile-loading">Carregando perfil...</div>
                         ) : error ? (
