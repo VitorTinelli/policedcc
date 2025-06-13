@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { apiCall } from '../../commons/ApiHelper'
+import { confirmCode } from './confirmCode'
 import './Register.css'
 
 function Register() {
@@ -57,18 +58,10 @@ const handleConfirm = async () => {
   setError('')
 
   try {
-    const response = await apiCall('/api/register/confirmCode', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ nick, code }),
-    })
+    const result = await confirmCode(nick, code)
 
-    const data = await response.json()
-
-    if (!response.ok) {
-      setError(data.error)
+    if (!result.success) {
+      setError(result.error || 'Erro ao confirmar código')
       return
     }
 

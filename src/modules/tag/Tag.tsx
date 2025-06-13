@@ -13,11 +13,10 @@ function Tag() {
     const { session } = useAuth();
 
     const handleTagChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-        let value = e.target.value.toUpperCase(); // Converter para maiúsculas automaticamente
+        let value = e.target.value; 
         if (value.length > 3) value = value.slice(0, 3);
         setTag(value);
         
-        // Limpar mensagens ao modificar o input
         if (error) setError('');
         if (success) setSuccess('');
     }, [error, success]);

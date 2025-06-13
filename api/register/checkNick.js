@@ -1,6 +1,17 @@
 import supabase from '../supabase.js'
-import { v4 as uuidv4 } from 'uuid'
 import { withAuth } from '../security.js'
+
+/**
+ * Gera um código no formato DDMxxxx-xx-xxxxBR
+ * @returns {string} Código gerado
+ */
+function generateDDMCode() {
+  const part1 = Math.floor(Math.random() * 10000).toString().padStart(4, '0')
+  const part2 = Math.floor(Math.random() * 100).toString().padStart(2, '0')
+  const part3 = Math.floor(Math.random() * 10000).toString().padStart(4, '0')
+  
+  return `DDM${part1}-${part2}-${part3}BR`
+}
 
 async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -27,13 +38,11 @@ async function handler(req, res) {
 
     if (user?.status === 'ativo') {
       return res.status(400).json({ error: 'already_registered' })
-    }
-
-    if (!user || user.status === 'inativo') {
+    }    if (!user || user.status === 'inativo') {
       return res.status(400).json({ error: 'Conta Inativa ou não encontrada' })
     }
 
-    const code = uuidv4()
+    const code = generateDDMCode()
 
     return res.status(200).json({ code })
   } catch (error) {
